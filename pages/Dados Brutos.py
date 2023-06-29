@@ -69,8 +69,26 @@ def normalize_table(row):
 df_temp.apply(lambda x:normalize_table(x),axis=1)
 df_normalized = pd.DataFrame(dict_normalized)
 
-st.write(df_normalized)
+#st.write(df_normalized)
 
-#dados = pd.DataFrame.from_dict(r.json())
-#dados 
+# style
+th_props = [
+  ('font-size', '16px'),
+  ('text-align', 'center'),
+  ('font-weight', 'bold'),
+  ('color', '#6d6d6d'),
+  ('background-color', '#EAE5E5')
+  ]
+                               
+td_props = [
+  ('font-size', '14px')
+  ]
+                                 
+styles = [
+  dict(selector="th", props=th_props),
+  dict(selector="td", props=td_props)
+  ]
 
+# table
+df2=df_normalized.style.set_properties(**{'text-align': 'left'}).set_table_styles(styles)
+st.table(df2)
