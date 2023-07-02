@@ -93,7 +93,7 @@ df_wine_last_15_year['price_per_liter'] = ((df_wine_last_15_year['value']/df_win
 
 
 st.write(df_normalized)
-st.divier()
+st.divider()
 
 st.header('Exportação de Vinhos - 2007 a 2021 🍷')
 st.write(df_wine_last_15_year)
