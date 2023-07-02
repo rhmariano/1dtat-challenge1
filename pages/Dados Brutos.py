@@ -69,26 +69,50 @@ def normalize_table(row):
 df_temp.apply(lambda x:normalize_table(x),axis=1)
 df_normalized = pd.DataFrame(dict_normalized)
 
-#st.write(df_normalized)
+
+df_normalized['year'] = df_normalized['year'].astype(str)
+df_normalized['date_string'] = df_normalized['year'] + '-01-01'
+df_normalized['date'] = pd.to_datetime(df_normalized['date_string'])
+
+# Filtering 2021 
+df_2021 = df_normalized[df_normalized['year'] == '2021']
+
+# Filtering Last 15 years
+df_wine_last_15_year = df_normalized[df_normalized['date'] > '2007-01-01']
+
+# Removing countries that didn't buy in the last 15y 
+df_total_liters_per_country = df_wine_last_15_year[['country_destination','liters']].groupby('country_destination').sum()
+
+# creating list of countries that sold
+list_did_not_buy_last_15y = []
+list_did_not_buy_last_15y = df_total_liters_per_country[df_total_liters_per_country['liters'] == 0].index.values.tolist()
+
+# removing countries that did not buy wine last 15 years
+df_wine_last_15_year = df_wine_last_15_year.drop(df_wine_last_15_year[df_wine_last_15_year['country_destination'].isin(list_did_not_buy_last_15y)].index)
+df_wine_last_15_year['price_per_liter'] = ((df_wine_last_15_year['value']/df_wine_last_15_year['liters']).round(2)).fillna(0)
+
+
+st.write(df_normalized)
+st.write(df_wine_last_15_year)
 
 # style
-th_props = [
-  ('font-size', '16px'),
-  ('text-align', 'center'),
-  ('font-weight', 'bold'),
-  ('color', '#6d6d6d'),
-  ('background-color', '#EAE5E5')
-  ]
+# th_props = [
+#   ('font-size', '16px'),
+#   ('text-align', 'center'),
+#   ('font-weight', 'bold'),
+#   ('color', '#6d6d6d'),
+#   ('background-color', '#EAE5E5')
+#   ]
                                
-td_props = [
-  ('font-size', '14px')
-  ]
+# td_props = [
+#   ('font-size', '14px')
+#   ]
                                  
-styles = [
-  dict(selector="th", props=th_props),
-  dict(selector="td", props=td_props)
-  ]
+# styles = [
+#   dict(selector="th", props=th_props),
+#   dict(selector="td", props=td_props)
+#   ]
 
-# table
-df2=df_normalized.style.set_properties(**{'text-align': 'left'}).set_table_styles(styles)
-st.table(df2)
+# # table
+# df2=df_normalized.style.set_properties(**{'text-align': 'left'}).set_table_styles(styles)
+# st.table(df2)
