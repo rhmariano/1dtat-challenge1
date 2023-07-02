@@ -78,7 +78,7 @@ df_normalized['date'] = pd.to_datetime(df_normalized['date_string'])
 df_2021 = df_normalized[df_normalized['year'] == '2021']
 
 # Filtering Last 15 years
-df_wine_last_15_year = df_normalized[df_normalized['date'] > '2007-01-01']
+df_wine_last_15_year = df_normalized[df_normalized['date'] >= '2007-01-01']
 
 # Removing countries that didn't buy in the last 15y 
 df_total_liters_per_country = df_wine_last_15_year[['country_destination','liters']].groupby('country_destination').sum()
@@ -93,6 +93,9 @@ df_wine_last_15_year['price_per_liter'] = ((df_wine_last_15_year['value']/df_win
 
 
 st.write(df_normalized)
+st.divier()
+
+st.header('Exportação de Vinhos - 2007 a 2021 🍷')
 st.write(df_wine_last_15_year)
 
 # style
